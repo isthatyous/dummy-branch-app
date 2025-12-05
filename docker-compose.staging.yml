@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: branch_db_staging
+    deploy:
+    # 1. Resource Limits on Stage DB approx similar to Prod
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 1G
+   
+    
+
+  api:
+    container_name: branch_api_staging
+    build: .
+    environment:
+     # 2. Structure JSON Logging
+      FLASK_ENV: staging
+     
+    
+  
+ 

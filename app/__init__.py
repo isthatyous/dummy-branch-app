@@ -1,10 +1,11 @@
 from flask import Flask
 
-from .config import Config
+from .config import get_config
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    app.config.from_object(Config())
+    cofig_Class = get_config()
+    app.config.from_object(cofig_Class)
 
     # Lazy imports to avoid circular deps during app init
     from .routes.health import bp as health_bp
@@ -14,5 +15,16 @@ def create_app() -> Flask:
     app.register_blueprint(health_bp)
     app.register_blueprint(loans_bp, url_prefix="/api")
     app.register_blueprint(stats_bp, url_prefix="/api")
+
+    if cofig_Class.FLASK_ENV == 'development':
+        print("Running in Dev mode (Development)")
+
+    if cofig_Class.FLASK_ENV == 'staging':
+        print("Running in Stage mode (Staging)")
+
+    if cofig_Class.FLASK_ENV == 'production':
+        print("Running in Prod mode (Production)")
+    
+
 
     return app

@@ -1,0 +1,97 @@
+# -----------------------------
+# Python
+# -----------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg
+*.egg-info/
+.eggs/
+dist/
+build/
+pip-wheel-metadata/
+*.manifest
+*.spec
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage
+.coverage
+.coverage.*
+.cache
+pytest_cache/
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# -----------------------------
+# Environment Variables
+# -----------------------------
+*.env
+.env.*
+!example.env
+
+# -----------------------------
+# Docker
+# -----------------------------
+# Ignore Docker build files
+docker-compose.override.yml
+docker-data/
+.docker/
+**/Dockerfile.*
+
+# Docker volumes & logs
+volumes/
+*.log
+
+# -----------------------------
+# IDE / Editor Files
+# -----------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# -----------------------------
+# OS Files
+# -----------------------------
+.DS_Store
+Thumbs.db
+
+# -----------------------------
+# Terraform (optional but useful)
+# -----------------------------
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# -----------------------------
+# Misc
+# -----------------------------
+logs/
+tmp/
+.cache/
+
+# SSL certificates
+certs/
+*.pem
+*.key
+*.crt
