@@ -36,7 +36,7 @@ jobs:
 
   build-scan-push:
     name: Build-> Scan-> PushImage
-    need: test
+    needs: test
     runs-on: ubuntu-latest
 
     steps:
