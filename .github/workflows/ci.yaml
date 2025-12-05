@@ -57,7 +57,7 @@ jobs:
         run: |
           TAG=${GITHUB_SHA::7}
           echo "TAG=$TAG" >> $GITHUB_ENV
-          docker build -t $IMAGE_NAME:$TAG
+          docker build -t $IMAGE_NAME:$TAG .
 
 
       - name: Trivy Security Scan
