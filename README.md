@@ -91,7 +91,7 @@ http://localhost:3000/login
 ````
 ### Prometheus data source 
 ````
-https://prometheus/9090
+http://prometheus:9090
 ````
 
 ### Dasboard JSON
