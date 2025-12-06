@@ -20,41 +20,80 @@ curl http://localhost:8000/api/loans
 ```
 
 ## Configuration
-
-See `.env.example` for env vars. By default:
-- `DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/microloans`
-- API listens on `localhost:8000`.
-
-## API
-
-- GET `/health` → `{ "status": "ok" }`
-- GET `/api/loans` → list all loans
-- GET `/api/loans/:id` → get loan by id
-- POST `/api/loans` → create loan (status defaults to `pending`)
-
-Example create:
+### 1. Create Certificate Directory
 ```bash
-curl -X POST http://localhost:8000/api/loans \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "borrower_id": "usr_india_999",
-    "amount": 12000.50,
-    "currency": "INR",
-    "term_months": 6,
-    "interest_rate_apr": 24.0
-  }'
+/certs
 ```
 
-- GET `/api/stats` → aggregate stats: totals, avg, grouped by status/currency.
+This folder stores:
+- SSL Private Key
+- Self-signed Certificate
 
-## Development
+Keeping them isolated avoids pollution inside the project tree.
 
-- App entrypoint: `wsgi.py` (`wsgi:app`)
-- Flask app factory: `app/__init__.py`
-- Models: `app/models.py`
-- Migrations: `alembic/`
 
-## Notes
+### 2. Generate Private Key (Important Decision)
+  - I generated the private key using:
+```` 
+openssl genrsa -out certs/branchloans.key 2048
+````
+### 3. Generate a Self-Signed SSL Certificate
+````
+ openssl req -new -x509 -key certs/branchloans.key \
+ -out certs/branchloans.crt -days 365 \
+ -subj "/C=IN/ST=MH/L=Mumbai/O=BranchLoansLocal/CN=branchloans.com"
+````
+This certificate works for:
 
-- Amounts are validated server-side (0 < amount ≤ 50000).
-- No authentication for this prototype.
+- Local HTTPS
+- Secure Docker internal communication
+- Nginx TLS termination
+Browsers may show a warning → ignore for local development.
+
+### 4. Domain Not Resolving
+Reason: Local DNS not configured.
+I fixed it by editing: (My debian12 Machine)
+
+````
+sudo /etc/hosts
+````
+Added:
+
+````
+127.0.0.1   branchloans.com
+````
+### 6 How to Switch Environments (Important)
+- Uses:
+````
+docker compose --env-file .env \
+-f docker-compose.yml \
+-f docker-compose.<ENV>.yml \
+up -d --build
+````
+
+````
+docker compose --env-file .env -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+docker compose --env-file .env -f docker-compose.yml -f docker-compose.staging.yml up -d --build
+docker compose --env-file .env -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+````
+
+### Viewing Metrics
+
+````
+https://branchloans.com.metrics
+````
+
+### Grafana
+Open: 
+
+````
+http://localhost:3000/login
+````
+### Prometheus data source 
+````
+https://prometheus/9090
+````
+
+### Dasboard JSON
+
+- Visit Grafana-Dashboard-Json.md
