@@ -1,5 +1,5 @@
 from flask import Flask
-
+from .metrics import bp as metrics_bp, setup_metrics  #
 from .config import get_config
 
 def create_app() -> Flask:
@@ -15,6 +15,10 @@ def create_app() -> Flask:
     app.register_blueprint(health_bp)
     app.register_blueprint(loans_bp, url_prefix="/api")
     app.register_blueprint(stats_bp, url_prefix="/api")
+
+    # mterics 
+    app.register_blueprint(metrics_bp)
+    setup_metrics(app)
 
     if cofig_Class.FLASK_ENV == 'development':
         print("Running in Dev mode (Development)")

@@ -9,6 +9,8 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    networks:
+      - branchnet
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
@@ -17,11 +19,14 @@ services:
 
   api:
     build: .
+    container_name: branch_flaskapi
     environment:
       FLASK_ENV: ${FLASK_ENV}
       DATABASE_URL: ${DATABASE_URL}
       PORT: 8000
       PYTHONPATH: /app
+    networks:
+      - branchnet
     depends_on:
       db:
         condition: service_healthy
@@ -32,6 +37,8 @@ services:
   proxy:
     image: nginx:stable-alpine
     container_name: branch_proxy
+    networks:
+      - branchnet
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certs:/etc/nginx/certs:ro
@@ -40,7 +47,31 @@ services:
  
     depends_on:
       api:
-        condition: service_started 
+        condition: service_started
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: branch_prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - branchnet
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: branch_grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - branchnet
+    depends_on:
+      - prometheus
+
 
 volumes:
   db_data:
+networks:
+  branchnet:
+    driver: bridge
