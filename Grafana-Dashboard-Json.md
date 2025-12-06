@@ -420,3 +420,27 @@
   "version": 0
 }
 ```
+
+## UI Screenshots
+
+### api/loans data
+![Dashboard](./Assets/api-loans.png)
+
+### prometheus-datasource
+![Login Page](./Assets/prometheus1.png)
+
+![Settings](./Assets/prometheus2.png)
+
+
+### Grafana Import
+![Settings](./Assets/prometheus2.png)
+
+
+### JSON
+![Settings](./Assets/grafana1.png)
+
+### Grafana Dasboard Name
+![Settings](./Assets/grafana2.png)
+
+### Dashboard
+![Settings](./Assets/grafana3.png)
